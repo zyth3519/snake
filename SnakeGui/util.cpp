@@ -1,11 +1,11 @@
-#include <graphics.h>
+ï»¿#include <graphics.h>
 #include <time.h>
 #include <conio.h>
 #include <atlstr.h>
 #include "bean.h"
 #include "util.h"
 
-// ÅĞ¶ÏÊÇ·ñÅöµ½ÉíÌå,²»ÅĞ¶ÏÉßÍ·
+// åˆ¤æ–­æ˜¯å¦ç¢°åˆ°èº«ä½“,ä¸åˆ¤æ–­è›‡å¤´
 bool hitBody(Square square)
 {
 	for (int i = 1; i < snake.len; i++)
@@ -19,10 +19,10 @@ bool hitBody(Square square)
 }
 
 /*
-»­ÓĞ±ß¿òµÄÌî³äÕı·½ĞÎ
-square Õı·½ĞÎ
-fill Ìî³äÑÕÉ«£¬Ä¬ÈÏÂÌÉ«
-border ±ß¿òÑÕÉ«£¬Ä¬ÈÏÂÌÉ«
+ç”»æœ‰è¾¹æ¡†çš„å¡«å……æ­£æ–¹å½¢
+square æ­£æ–¹å½¢
+fill å¡«å……é¢œè‰²ï¼Œé»˜è®¤ç»¿è‰²
+border è¾¹æ¡†é¢œè‰²ï¼Œé»˜è®¤ç»¿è‰²
 */
 void drawSquare(Square square, COLORREF fill, COLORREF border)
 {
@@ -31,7 +31,7 @@ void drawSquare(Square square, COLORREF fill, COLORREF border)
 	fillrectangle(square.left, square.top, square.right, square.bottom);
 }
 
-// Ëæ»úÉú³ÉÑÕÉ«
+// éšæœºç”Ÿæˆé¢œè‰²
 COLORREF randColor()
 {
 	srand((unsigned)time(0));
@@ -43,9 +43,9 @@ COLORREF randColor()
 }
 
 /*
-»ñÈ¡Ò»¸ö±ß³¤Îª10µÄÕı·½ĞÎ
-x,y ×ø±ê
-*square Õı·½ĞÎµÄÖ¸Õë,±£Ö¤²Ù×÷µÄÊÇÍ¬Ò»¸ö±äÁ¿
+è·å–ä¸€ä¸ªè¾¹é•¿ä¸º10çš„æ­£æ–¹å½¢
+x,y åæ ‡
+*square æ­£æ–¹å½¢çš„æŒ‡é’ˆ,ä¿è¯æ“ä½œçš„æ˜¯åŒä¸€ä¸ªå˜é‡
 */
 void getSquare(int x, int y, Square* square)
 {
@@ -56,7 +56,7 @@ void getSquare(int x, int y, Square* square)
 }
 
 /*
-ÅĞ¶ÏÊÇ·ñÏà½»
+åˆ¤æ–­æ˜¯å¦ç›¸äº¤
 */
 bool hit(Square s1, Square s2)
 {

@@ -1,4 +1,4 @@
-#include <graphics.h>
+ï»¿#include <graphics.h>
 #include <time.h>
 #include <atlstr.h>
 #include <conio.h>
@@ -8,7 +8,7 @@
 
 void createMap()
 {
-	// ÉèÖÃ±ß¿òÑÕÉ«
+	// è®¾ç½®è¾¹æ¡†é¢œè‰²
 	setlinecolor(GREEN);
 	rectangle(10, 10, 500, 390);
 	rectangle(20, 20, 490, 380);
@@ -17,16 +17,16 @@ void createMap()
 void createFood()
 {
 	srand((unsigned)time(NULL));
-	// Ëæ»úÉú³É×ø±ê
+	// éšæœºç”Ÿæˆåæ ‡
 	int x = rand() % 46 + 3;
 	int y = rand() % 35 + 3;
-	// Éú³É±ØĞëÊÇ10µÄ±¶Êı£¬Òª²»È»¶Ô²»Æğ
+	// ç”Ÿæˆå¿…é¡»æ˜¯10çš„å€æ•°ï¼Œè¦ä¸ç„¶å¯¹ä¸èµ·
 	x = x * 10;
 	y = y * 10;
 
 	getSquare(x, y, &food);
 
-	// ÅĞ¶ÏÊÇ·ñÉú³ÉÉßÉÏ,hitBody²»ÅĞ¶ÏÉßÍ·
+	// åˆ¤æ–­æ˜¯å¦ç”Ÿæˆè›‡ä¸Š,hitBodyä¸åˆ¤æ–­è›‡å¤´
 	while (hit(food, snake.body[0]) && hitBody(food))
 	{
 		int x = rand() % 46 + 3;
@@ -36,16 +36,16 @@ void createFood()
 		getSquare(x, y, &food);
 	}
 
-	// Ò»¸ö°ë¾¶Îª5µÄÔ²
+	// ä¸€ä¸ªåŠå¾„ä¸º5çš„åœ†
 	drawSquare(food);
 }
 void createSnake()
 {
-	// ³õÊ¼×ø±ê
+	// åˆå§‹åæ ‡
 	int x = 250;
 	int y = 190;
 
-	// Éú³ÉÉßÍ·
+	// ç”Ÿæˆè›‡å¤´
 	getSquare(x, y, &snake.body[0]);
 	drawSquare(snake.body[0], snakeColor, snakeColor);
 	Sleep(100);
@@ -53,14 +53,14 @@ void createSnake()
 	for (int i = 1; i < snake.len; i++)
 	{
 
-		// ÎÒ²»ÏëĞ´Ì«³¤
+		// æˆ‘ä¸æƒ³å†™å¤ªé•¿
 		Square* body1 = &snake.body[i];
 		Square* body2 = &snake.body[i - 1];
 
 		body1->left = body2->left + 10;
 		body1->right = body2->right + 10;
 
-		// ¶¥ºÍÎ²Ã»ÓĞ¸Ä±ä
+		// é¡¶å’Œå°¾æ²¡æœ‰æ”¹å˜
 		body1->top = body2->top;
 		body1->bottom = body2->bottom;
 
@@ -70,10 +70,10 @@ void createSnake()
 
 bool moveSnake()
 {
-	// ·ÅÔÚºóÃæ²Ù×÷»á²»Á÷³©
+	// æ”¾åœ¨åé¢æ“ä½œä¼šä¸æµç•…
 	keyDown();
 
-	// ÉßµÄÄ©Î»Öµ
+	// è›‡çš„æœ«ä½å€¼
 	Square s = snake.body[snake.len - 1];
 
 	for (int i = snake.len - 1; i > 0; i--)
@@ -118,13 +118,13 @@ bool moveSnake()
 }
 void gameOver()
 {
-	LPCTSTR  end = L"ÓÎÏ·½áÊø";
+	LPCTSTR  end = L"æ¸¸æˆç»“æŸ";
 	cleardevice();
-	settextstyle(84, 0, L"»ªÎÄçúçê");
+	settextstyle(84, 0, L"åæ–‡ç¥ç€");
 	outtextxy(132, 50, end);
-	settextstyle(24, 0, L"¿¬Ìå");
+	settextstyle(24, 0, L"æ¥·ä½“");
 	settextcolor(COLORREF RGB(144, 236, 194));
-	outtextxy(220, 285, L"ÈÎÒâ°´¼ü¹Ø±Õ");
+	outtextxy(220, 285, L"ä»»æ„æŒ‰é”®å…³é—­");
 };
 
 void eatFood()
@@ -136,31 +136,31 @@ void eatFood()
 	}
 }
 
-// ÏÔÊ¾·ÖÊı
+// æ˜¾ç¤ºåˆ†æ•°
 void grade()
 {
 
-	settextstyle(16, 0, L"¿¬Ìå");
-	LPCTSTR grade = L"·ÖÊı: ";
+	settextstyle(16, 0, L"æ¥·ä½“");
+	LPCTSTR grade = L"åˆ†æ•°: ";
 	CString str1 = CString(grade) + CString(intTOLPCTSTR(snake.len - 3));
 	outtextxy(510, 30, str1);
 
-	LPCTSTR speed = L"ËÙ¶È: ";
+	LPCTSTR speed = L"é€Ÿåº¦: ";
 	CString str2 = CString(speed) + CString(intTOLPCTSTR(snake.speed));
 	outtextxy(510, 50, str2);
 
 }
 
 
-//ÏÔÊ¾·âÃæ¼°ÉèÖÃ×ÖÌå,ÕÒ±ğÈËµÄ
+//æ˜¾ç¤ºå°é¢åŠè®¾ç½®å­—ä½“,æ‰¾åˆ«äººçš„
 void topic()
 {
-	settextstyle(84, 0, L"»ªÎÄçúçê");
+	settextstyle(84, 0, L"åæ–‡ç¥ç€");
 	settextcolor(COLORREF RGB(134, 235, 246));
-	outtextxy(80, 125, L"Ì°³ÔÁúÎïÓï");
-	settextstyle(24, 0, L"¿¬Ìå");
+	outtextxy(80, 125, L"è´ªåƒé¾™ç‰©è¯­");
+	settextstyle(24, 0, L"æ¥·ä½“");
 	settextcolor(COLORREF RGB(144, 236, 194));
-	outtextxy(220, 285, L"ÈÎÒâ°´¼ü¿ªÊ¼");
+	outtextxy(220, 285, L"ä»»æ„æŒ‰é”®å¼€å§‹");
 	_getch();
 	cleardevice();
 }

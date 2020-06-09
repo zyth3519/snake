@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 #ifndef BEAN_H
 #define BEAN_H
 #include <graphics.h>
 
-// ×î´ó³¤¶È
+// æœ€å¤§é•¿åº¦
 const int MAXSIZE = 999;;
 
 const char UP = 'w';
@@ -19,7 +19,7 @@ struct Square
 	int right;
 };
 
-// Éß
+// è›‡
 struct Snake
 {
 	Square body[MAXSIZE];

@@ -1,7 +1,7 @@
-#include "bean.h"
+ï»¿#include "bean.h"
 #include "util.h"
 
 Snake snake;
 Square food;
-// ÉßÑÕÉ«
+// è›‡é¢œè‰²
 COLORREF snakeColor = randColor();
