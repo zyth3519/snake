@@ -1,15 +1,14 @@
 ﻿#pragma once
-#ifndef DRAW_H
-#define DRAW_H
+#ifndef CORE_H
+#define CORE_H
 #include "bean.h"
 
 void createMap();
 void createFood();
-void createSnake(MoveKey key, int x, int y);
 void createSnake(Snake* snake, MoveKey key, int x, int y);
 bool moveSnake(Snake* snake);
-void gameOver();
 void eatFood(Snake* snake);
-void grade();
-void topic();
+void keyDown();
+bool hitWall(Snake* snake);
+bool hitBody(Snake* snake, int x, int y);
 #endif // !DRAW_H

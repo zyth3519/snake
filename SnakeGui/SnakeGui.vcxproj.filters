@@ -21,13 +21,13 @@
     <ClCompile Include="bean.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="draw.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="util.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="graphics.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="core.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,13 +38,13 @@
     <ClInclude Include="bean.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="draw.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="util.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="graphics.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="core.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

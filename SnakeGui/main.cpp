@@ -1,6 +1,6 @@
 ﻿#include <conio.h>
 #include "graphics.h"
-#include "draw.h"
+#include "core.h"
 #include "bean.h"
 #include "util.h"
 

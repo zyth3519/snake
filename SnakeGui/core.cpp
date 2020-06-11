@@ -2,7 +2,7 @@
 #include <atlstr.h>
 #include <conio.h>
 #include <iostream>
-#include "draw.h"
+#include "core.h"
 #include "graphics.h"
 #include "util.h"
 #include "bean.h"
@@ -115,16 +115,6 @@ bool moveSnake(Snake* snake)
 
 	return false;
 }
-void gameOver()
-{
-	LPCTSTR  end = L"游戏结束";
-	cleardevice();
-	settextstyle(84, 0, L"华文琥珀");
-	outtextxy(132, 50, end);
-	settextstyle(24, 0, L"楷体");
-	settextcolor(COLORREF RGB(144, 236, 194));
-	outtextxy(220, 285, L"任意按键关闭");
-};
 
 void eatFood(Snake* snake)
 {
@@ -136,43 +126,81 @@ void eatFood(Snake* snake)
 	}
 }
 
-// 显示分数
-void grade()
+// 判断是否碰到蛇的身体
+bool hitBody(Snake* snake, int x, int y)
 {
-	settextstyle(16, 0, L"楷体");
-
-	int y = 30;
+	// 所有蛇
 	for (int i = 0; i < snakes.size(); i++)
 	{
-		CString str;
-		str.Format(L"%d", i + 1);
-		CString user = CString(L"玩家") + str;
-		outtextxy(510, y, user);
+		Snake* s = snakes[i];
 
-		CString str2;
-		str2.Format(L"%d", snakes[i]->len - 3);
-		CString grade = CString(L"分数: ") + str2;
-		outtextxy(510, y + 20, grade);
-		y += 80;
+		// 如果判断的是当前蛇，那就不判断蛇头
+		int a = 0;
+		if (s == snake)
+		{
+			a++;
+		}
+		for (; a < snake->len; a++)
+		{
+			if (isOverlap(x, y, s->x[a], s->y[a]))
+			{
+				return true;
+			}
+		}
 	}
-
-	CString str;
-	str.Format(L"%d", speed);
-	CString speedStr = CString(L"速度") + str;
-	outtextxy(510, 200, speedStr);
-
+	return false;
 }
 
-
-//显示封面及设置字体,找别人的
-void topic()
+// 检测按键
+void keyDown()
 {
-	settextstyle(84, 0, L"华文琥珀");
-	settextcolor(COLORREF RGB(134, 235, 246));
-	outtextxy(80, 125, L"贪吃龙物语");
-	settextstyle(24, 0, L"楷体");
-	settextcolor(COLORREF RGB(144, 236, 194));
-	outtextxy(220, 285, L"任意按键开始");
-	_getch();
-	cleardevice();
+	if (_kbhit())
+	{
+		char key = _getch();
+		// 判断案件与谁绑定
+		for (int i = 0; i < snakes.size(); i++)
+		{
+			Snake* snake = snakes[i];
+			if (key == snake->key.up)
+			{
+				if (snake->direction != snake->key.down)
+					snake->direction = key;
+				return;
+
+			}
+			if (key == snake->key.down)
+			{
+				if (snake->direction != snake->key.up)
+					snake->direction = key;
+				return;
+
+			}
+			if (key == snake->key.left)
+			{
+				if (snake->direction != snake->key.right)
+					snake->direction = key;
+				return;
+
+			}
+			if (key == snake->key.right)
+			{
+				if (snake->direction != snake->key.left)
+					snake->direction = key;
+				return;
+
+			}
+		}
+	}
+}
+
+// 是否撞墙
+bool hitWall(Snake* snake)
+{
+	// 判断四周
+	if (((snake->y[0] <= MAPTOP) || (snake->y[0] >= MAPBOTTOM)) ||
+		((snake->x[0] <= MAPLEFT) || (snake->x[0] >= MAPRIGHT)))
+	{
+		return true;
+	}
+	return false;
 }
