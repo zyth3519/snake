@@ -142,6 +142,7 @@
     <ClCompile Include="bean.cpp" />
     <ClCompile Include="draw.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="graphics.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,7 +151,11 @@
   <ItemGroup>
     <ClInclude Include="bean.h" />
     <ClInclude Include="draw.h" />
+    <ClInclude Include="graphics.h" />
     <ClInclude Include="util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SnakeGui.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

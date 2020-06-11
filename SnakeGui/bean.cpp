@@ -1,7 +1,9 @@
 ﻿#include "bean.h"
 #include "util.h"
 
-Snake snake;
-Square food;
+vector<Snake*> snakes;
+Food food;
 // 蛇颜色
 COLORREF snakeColor = randColor();
+
+int speed = 100;

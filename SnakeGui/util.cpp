@@ -2,33 +2,33 @@
 #include <time.h>
 #include <conio.h>
 #include <atlstr.h>
+#include "graphics.h"
 #include "bean.h"
 #include "util.h"
 
-// 判断是否碰到身体,不判断蛇头
-bool hitBody(Square square)
+// 判断是否碰到蛇的身体
+bool hitBody(Snake* snake, int x, int y)
 {
-	for (int i = 1; i < snake.len; i++)
+	// 所有蛇
+	for (int i = 0; i < snakes.size(); i++)
 	{
-		if (hit(snake.body[i], square))
+		Snake* s = snakes[i];
+
+		// 如果判断的是当前蛇，那就不判断蛇头
+		int a = 0;
+		if (s == snake)
 		{
-			return true;
+			a++;
+		}
+		for (; a < snake->len; a++)
+		{
+			if (isOverlap(x, y, s->x[a], s->y[a]))
+			{
+				return true;
+			}
 		}
 	}
 	return false;
-}
-
-/*
-画有边框的填充正方形
-square 正方形
-fill 填充颜色，默认绿色
-border 边框颜色，默认绿色
-*/
-void drawSquare(Square square, COLORREF fill, COLORREF border)
-{
-	setlinecolor(border);
-	setfillcolor(fill);
-	fillrectangle(square.left, square.top, square.right, square.bottom);
 }
 
 // 随机生成颜色
@@ -42,65 +42,54 @@ COLORREF randColor()
 	return RGB(r, g, b);
 }
 
-/*
-获取一个边长为10的正方形
-x,y 坐标
-*square 正方形的指针,保证操作的是同一个变量
-*/
-void getSquare(int x, int y, Square* square)
-{
-	square->top = y - 5;
-	square->bottom = y + 5;
-	square->left = x - 5;
-	square->right = x + 5;
-}
-
-/*
-判断是否相交
-*/
-bool hit(Square s1, Square s2)
-{
-	//return !(((s1.right < s2.left) || (s1.bottom > s2.top)) ||
-			 //((s2.right < s1.left) || (s2.bottom > s1.top)));
-
-	if (s1.bottom == s2.bottom && s1.left == s2.left && s1.top == s2.top && s1.right == s2.right)
-	{
-		return true;
-	}
-	return false;
-}
-
+// 检测按键
 void keyDown()
 {
 	if (_kbhit())
 	{
 		char key = _getch();
-		switch (key)
+		// 判断案件与谁绑定
+		for (int i = 0; i < snakes.size(); i++)
 		{
-		case UP:
-			if (snake.direction != DOWN)
-				snake.direction = key;
-			break;
-		case DOWN:
-			if (snake.direction != UP)
-				snake.direction = key;
-			break;
-		case LEFT:
-			if (snake.direction != RIGHT)
-				snake.direction = key;
-			break;
-		case RIGHT:
-			if (snake.direction != LEFT)
-				snake.direction = key;
-			break;
+			Snake* snake = snakes[i];
+			if (key == snake->key.up)
+			{
+				if (snake->direction != snake->key.down)
+					snake->direction = key;
+				return;
+
+			}
+			if (key == snake->key.down)
+			{
+				if (snake->direction != snake->key.up)
+					snake->direction = key;
+				return;
+
+			}
+			if (key == snake->key.left)
+			{
+				if (snake->direction != snake->key.right)
+					snake->direction = key;
+				return;
+
+			}
+			if (key == snake->key.right)
+			{
+				if (snake->direction != snake->key.left)
+					snake->direction = key;
+				return;
+
+			}
 		}
 	}
 }
 
-bool hitWall()
+// 是否撞墙
+bool hitWall(Snake* snake)
 {
-	if (((snake.body[0].top <= 20) || (snake.body[0].bottom >= 380)) ||
-		((snake.body[0].left <= 20) || (snake.body[0].right >= 490)))
+	// 判断四周
+	if (((snake->y[0] <= MAPTOP) || (snake->y[0] >= MAPBOTTOM)) ||
+		((snake->x[0] <= MAPLEFT) || (snake->x[0] >= MAPRIGHT)))
 	{
 		return true;
 	}

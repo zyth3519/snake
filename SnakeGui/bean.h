@@ -2,34 +2,47 @@
 #ifndef BEAN_H
 #define BEAN_H
 #include <graphics.h>
+#include <vector>
 
-// 最大长度
-const int MAXSIZE = 999;;
+using namespace std;
 
-const char UP = 'w';
-const char DOWN = 's';
-const char LEFT = 'a';
-const char RIGHT = 'd';
+const int MAPLEFT = 2;
+const int MAPTOP = 2;
+const int MAPRIGHT = 49;
+const int MAPBOTTOM = 38;
 
-struct Square
+const int MAXSIZE = 99;
+
+struct MoveKey
 {
-	int top;
-	int bottom;
-	int left;
-	int right;
+	char up;
+	char down;
+	char left;
+	char right;
 };
 
 // 蛇
 struct Snake
 {
-	Square body[MAXSIZE];
+	// 使用容器来储存
+	int x[MAXSIZE];
+	int y[MAXSIZE];
+	MoveKey key;
 	int len = 3;
-	char direction = LEFT;
-	int speed = 100;
+	// key默认为空,指定默认值没用
+	char direction;
 };
 
-extern Snake snake;
-extern Square food;
+struct Food
+{
+	int x;
+	int y;
+};
+
+// 每次添加一个条蛇，需要在此注册
+extern vector<Snake*> snakes;
+extern Food food;
 extern COLORREF snakeColor;
+extern int speed;
 #endif // !BEAN_H
 

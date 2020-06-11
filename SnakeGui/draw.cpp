@@ -1,120 +1,119 @@
-﻿#include <graphics.h>
-#include <time.h>
+﻿#include <time.h>
 #include <atlstr.h>
 #include <conio.h>
-#include "bean.h"
-#include "util.h"
+#include <iostream>
 #include "draw.h"
+#include "graphics.h"
+#include "util.h"
+#include "bean.h"
 
 void createMap()
 {
 	// 设置边框颜色
 	setlinecolor(GREEN);
-	rectangle(10, 10, 500, 390);
-	rectangle(20, 20, 490, 380);
+	drawBorder(MAPLEFT - 1, MAPTOP - 1, MAPRIGHT + 1, MAPBOTTOM + 1);
+	drawBorder(MAPLEFT, MAPTOP, MAPRIGHT, MAPBOTTOM);
+
 }
 
 void createFood()
 {
 	srand((unsigned)time(NULL));
 	// 随机生成坐标
-	int x = rand() % 46 + 3;
-	int y = rand() % 35 + 3;
-	// 生成必须是10的倍数，要不然对不起
-	x = x * 10;
-	y = y * 10;
+	food.x = rand() % 47 + 2;
+	food.y = rand() % 36 + 2;
 
-	getSquare(x, y, &food);
-
-	// 判断是否生成蛇上,hitBody不判断蛇头
-	while (hit(food, snake.body[0]) && hitBody(food))
+	// 判断是否生成蛇上
+	while (true)
 	{
-		int x = rand() % 46 + 3;
-		int y = rand() % 35 + 3;
-		x = x * 10;
-		y = y * 10;
-		getSquare(x, y, &food);
+		for (int i = 0; i < snakes.size(); i++)
+		{
+			Snake* snake = snakes[i];
+			for (int a = 0; a < snake->len; a++)
+			{
+				if (isOverlap(food.x, food.y, snake->x[i], snake->y[i]))
+				{
+					food.x = rand() % 47 + 2;
+					food.y = rand() % 36 + 2;
+					break;
+				}
+			}
+		}
+		break;
 	}
 
-	// 一个半径为5的圆
-	drawSquare(food);
-}
-void createSnake()
-{
-	// 初始坐标
-	int x = 250;
-	int y = 190;
-
-	// 生成蛇头
-	getSquare(x, y, &snake.body[0]);
-	drawSquare(snake.body[0], snakeColor, snakeColor);
-	Sleep(100);
-
-	for (int i = 1; i < snake.len; i++)
-	{
-
-		// 我不想写太长
-		Square* body1 = &snake.body[i];
-		Square* body2 = &snake.body[i - 1];
-
-		body1->left = body2->left + 10;
-		body1->right = body2->right + 10;
-
-		// 顶和尾没有改变
-		body1->top = body2->top;
-		body1->bottom = body2->bottom;
-
-		drawSquare(snake.body[i], randColor());
-	}
+	// 绘制食物
+	drawBlock(food.x, food.y);
 }
 
-bool moveSnake()
+// 通过坐标，生成蛇
+void createSnake(Snake* snake, MoveKey key, int x, int y)
 {
-	// 放在后面操作会不流畅
-	keyDown();
+	// 案件绑定
+	snake->key = key;
+	snake->direction = key.left;
 
-	// 蛇的末位值
-	Square s = snake.body[snake.len - 1];
+	snake->x[0] = x;
+	snake->y[0] = y;
+	// 蛇头
+	drawBlock(x, y);
 
-	for (int i = snake.len - 1; i > 0; i--)
+	for (int i = 1; i < snake->len; i++)
 	{
-		snake.body[i] = snake.body[i - 1];
+		// 向末尾添加数据
+		snake->x[i] = snake->x[i - 1] + 1;
+		snake->y[i] = snake->y[i - 1];
+
+		drawBlock(snake->x[i], snake->y[i]);
+	}
+	// 注册
+	snakes.push_back(snake);
+}
+
+bool moveSnake(Snake* snake)
+{
+	// 通过指针来操作
+	// 蛇尾位置
+	int x = snake->x[snake->len - 1];
+	int y = snake->y[snake->len - 1];
+
+	for (int i = snake->len - 1; i > 0; i--)
+	{
+		snake->x[i] = snake->x[i - 1];
+		snake->y[i] = snake->y[i - 1];
 	}
 
-	switch (snake.direction)
+	// 方向
+	char key = snake->direction;
+
+	if (key == snake->key.up)
 	{
-	case UP:
-		snake.body[0].top -= 10;
-		snake.body[0].bottom -= 10;
-		break;
-	case DOWN:
-		snake.body[0].top += 10;
-		snake.body[0].bottom += 10;
-		break;
-	case LEFT:
-		snake.body[0].left -= 10;
-		snake.body[0].right -= 10;
-		break;
-	case RIGHT:
-		snake.body[0].left += 10;
-		snake.body[0].right += 10;
-		break;
+		snake->y[0]--;
+	} else if (key == snake->key.down)
+	{
+		snake->y[0]++;
+	} else if (key == snake->key.left)
+	{
+		snake->x[0]--;
+	} else if (key == snake->key.right)
+	{
+		snake->x[0]++;
 	}
 
-	drawSquare(snake.body[0], randColor());
+	// 绘制头
+	drawBlock(snake->x[0], snake->y[0]);
+	// 吃食物
+	eatFood(snake);
 
-	eatFood();
-
-	if (hitBody(snake.body[0]) || hitWall())
+	// 是否碰到墙或身体
+	if (hitBody(snake, snake->x[0], snake->y[0]) || hitWall(snake))
 	{
-		return false;
+		return true;
 	}
+	// 清楚末尾
+	clearBlock(x, y);
 
-	clearrectangle(s.left, s.top, s.right, s.bottom);
-
-	Sleep(snake.speed);
-
-	return true;
+	return false;
 }
 void gameOver()
 {
@@ -127,27 +126,40 @@ void gameOver()
 	outtextxy(220, 285, L"任意按键关闭");
 };
 
-void eatFood()
+void eatFood(Snake* snake)
 {
-	if (hit(snake.body[0], food))
+	if (isOverlap(snake->x[0], snake->y[0], food.x, food.y))
 	{
 		createFood();
-		snake.len += 1;
+		// 蛇的长度一
+		snake->len++;
 	}
 }
 
 // 显示分数
 void grade()
 {
-
 	settextstyle(16, 0, L"楷体");
-	LPCTSTR grade = L"分数: ";
-	CString str1 = CString(grade) + CString(intTOLPCTSTR(snake.len - 3));
-	outtextxy(510, 30, str1);
 
-	LPCTSTR speed = L"速度: ";
-	CString str2 = CString(speed) + CString(intTOLPCTSTR(snake.speed));
-	outtextxy(510, 50, str2);
+	int y = 30;
+	for (int i = 0; i < snakes.size(); i++)
+	{
+		CString str;
+		str.Format(L"%d", i + 1);
+		CString user = CString(L"玩家") + str;
+		outtextxy(510, y, user);
+
+		CString str2;
+		str2.Format(L"%d", snakes[i]->len - 3);
+		CString grade = CString(L"分数: ") + str2;
+		outtextxy(510, y + 20, grade);
+		y += 80;
+	}
+
+	CString str;
+	str.Format(L"%d", speed);
+	CString speedStr = CString(L"速度") + str;
+	outtextxy(510, 200, speedStr);
 
 }
 

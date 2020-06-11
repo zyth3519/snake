@@ -2,12 +2,9 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+bool hitBody(Snake* snake, int x, int y);
 COLORREF randColor();
-bool hitBody(Square square);
-void getSquare(int x, int y, Square* square);
-bool hit(Square s1, Square s2);
 void keyDown();
-bool hitWall();
+bool hitWall(Snake* snake);
 LPCTSTR intTOLPCTSTR(int i);
-void drawSquare(Square square, COLORREF fill = GREEN, COLORREF border = GREEN);
 #endif // !UTIL_H
